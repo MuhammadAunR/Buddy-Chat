@@ -1,11 +1,124 @@
-import React from 'react'
+import heroSectionImage from '../assets/hero-section.webp'
+import { Copy, Loader, SendHorizontal } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { sendMessage } from '../services/gemini'
+import Markdown from 'react-markdown'
+import Sidebar from '../components/Sidebar'
 
 const Home = () => {
-  return (
-    <div>
-      Home
-    </div>
-  )
+
+    const [messages, setMessages] = useState([])
+    const [input, setInput] = useState('')
+    const [loading, setLoading] = useState(false)
+    const [conversations, setConversations] = useState(() => {
+        const stored = localStorage.getItem('conversations')
+        return stored ? JSON.parse(stored) : [];
+    })
+
+
+    useEffect(() => {
+        const handleBeforeUnload = () => {
+            if (messages.length > 0) {
+                const newConversation = {
+                    id: Date.now(),
+                    date: new Date().toLocaleDateString(),
+                    messages: messages
+                }
+                const updatedConversations = [...conversations, newConversation]
+                localStorage.setItem('conversations', JSON.stringify(updatedConversations))
+            }
+        }
+        window.addEventListener('beforeunload', handleBeforeUnload)
+        return () => window.removeEventListener('beforeunload', handleBeforeUnload)
+    }, [messages, conversations])
+
+
+    console.log(conversations)
+
+    const handleSend = async () => {
+        if (!input.trim() || loading) return
+        setMessages(prev => [...prev, { role: 'User', text: input }])
+        setInput('')
+        setLoading(true)
+
+        const response = await sendMessage(input)
+        setMessages(prev => [...prev, { role: 'AI', text: response }])
+        setLoading(false)
+    }
+
+    const copyTextToClipboard = (text) => {
+        navigator.clipboard.writeText(text)
+        alert('Text Copied')
+    }
+
+    return (
+        <main className='relative h-screen bg-(--color-chat) overflow-hidden'>
+            <Sidebar />
+            <div className='w-full h-70'>
+                <img
+                    src={heroSectionImage}
+                    alt="Hero Section Image"
+                    className='h-70 w-full object-cover brightness-50'
+                />
+            </div>
+
+            <section className='bg-(--color-bg)/70 backdrop-blur-2xl w-10/14 mx-auto rounded-2xl flex flex-col justify-between absolute top-30 left-1/2 -translate-x-1/2 bottom-2 overflow-y-scroll'>
+
+                <div className='flex-1 px-5 py-7'>
+                    {messages.map((msg, index) => (
+                        <div
+                            key={index}
+                            className={`${msg.role === 'User' ? 'text-right' : 'text-left'} my-3`}>
+                            <div
+                                className={`inline-block rounded-2xl py-2 text-(--color-text) text-lg px-5 wrap-break-word
+                                ${msg.role === 'User' ? 'bg-(--color-chat)' : 'bg-(--color-comp)/10 prose'} relative group`}>
+                                {msg.role === 'AI' ? <Markdown>{msg.text}</Markdown> : msg.text}
+                                <span
+                                    title='Copy to Clipboard'
+                                    onClick={() => copyTextToClipboard(msg.text)}
+                                    className={`absolute -top-7 ${msg.role === 'User' ? 'right-5' : 'left-5'} opacity-0 group-hover:opacity-100 transition-all ease-linear duration-300 cursor-pointer hover:text-(--color-hovered)`}>
+                                    <Copy size={20} />
+                                </span>
+                            </div>
+                        </div>
+                    ))}
+                    {loading && (
+                        <div className='text-left my-3'>
+                            <Loader className='loader-animate ml-1' color='white' />
+                        </div>
+                    )}
+                </div>
+
+                <div className='sticky bottom-0 w-full px-5 pb-5'>
+                    <textarea
+                        rows={1}
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        placeholder='Enter your text here'
+                        className='w-full bg-(--color-chat) rounded-2xl text-(--color-text) outline-none text-lg py-5 px-7 pr-16 resize-none overflow-y-scroll max-h-50'
+                        onInput={(e) => {
+                            e.target.style.height = 'auto'
+                            e.target.style.height = e.target.scrollHeight + 'px'
+                        }}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                e.preventDefault()
+                                handleSend()
+                            }
+                        }}
+                    />
+                    <span
+                        onClick={(e) => {
+                            handleSend()
+                        }}
+                        className='absolute right-12 top-5.5 text-(--color-comp) hover:text-(--color-hovered) transition-all ease-linear hover:translate-x-1 cursor-pointer'>
+                        <SendHorizontal />
+                    </span>
+                </div>
+
+            </section>
+        </main>
+    )
 }
 
 export default Home

@@ -1,1 +1,45 @@
 @import 'tailwindcss';
+
+:root{
+    --color-bg:#0F172A;
+    --color-chat:#1E293B;
+    --color-comp:#2563EB;
+    --color-hovered:#3B82F6;
+    --color-text:#F1F5F9;
+}
+
+::-webkit-scrollbar{
+    background: transparent;
+}
+::-webkit-scrollbar-thumb{
+    background: #0F172A;
+    border-radius: 1rem;
+}
+
+@keyframes spin-zoom {
+    0%   { transform: rotate(0deg) ; }
+    50%  { transform: rotate(180deg) ; }
+    100% { transform: rotate(360deg) ; }
+}
+
+.loader-animate {
+    animation: spin-zoom 1.2s ease-in-out infinite;
+}
+
+.prose h1, .prose h2, .prose h3 { 
+    font-weight: bold; 
+    margin: 10px 0; 
+}
+.prose ul, .prose ol { 
+    padding-left: 20px; 
+    margin: 8px 0; 
+}
+.prose li { 
+    margin: 4px 0; 
+}
+.prose p { 
+    margin: 6px 0; 
+}
+.prose strong { 
+    font-weight: bold; 
+}
