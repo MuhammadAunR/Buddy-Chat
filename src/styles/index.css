@@ -10,10 +10,11 @@
 
 ::-webkit-scrollbar{
     background: transparent;
+    width: 7px;
 }
 ::-webkit-scrollbar-thumb{
     background: #0F172A;
-    border-radius: 1rem;
+    border-radius: 30px;
 }
 
 @keyframes spin-zoom {

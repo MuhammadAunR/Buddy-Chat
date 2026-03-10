@@ -1,39 +1,17 @@
 import heroSectionImage from '../assets/hero-section.webp'
 import { Copy, Loader, SendHorizontal } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { sendMessage } from '../services/gemini'
 import Markdown from 'react-markdown'
 import Sidebar from '../components/Sidebar'
+import { ContextProvider } from '../components/ContextWrapper'
 
 const Home = () => {
 
-    const [messages, setMessages] = useState([])
     const [input, setInput] = useState('')
     const [loading, setLoading] = useState(false)
-    const [conversations, setConversations] = useState(() => {
-        const stored = localStorage.getItem('conversations')
-        return stored ? JSON.parse(stored) : [];
-    })
 
-
-    useEffect(() => {
-        const handleBeforeUnload = () => {
-            if (messages.length > 0) {
-                const newConversation = {
-                    id: Date.now(),
-                    date: new Date().toLocaleDateString(),
-                    messages: messages
-                }
-                const updatedConversations = [...conversations, newConversation]
-                localStorage.setItem('conversations', JSON.stringify(updatedConversations))
-            }
-        }
-        window.addEventListener('beforeunload', handleBeforeUnload)
-        return () => window.removeEventListener('beforeunload', handleBeforeUnload)
-    }, [messages, conversations])
-
-
-    console.log(conversations)
+    const { setMessages ,messages } = useContext(ContextProvider)
 
     const handleSend = async () => {
         if (!input.trim() || loading) return

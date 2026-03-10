@@ -1,10 +1,11 @@
 import { Bot, CirclePlus, PanelLeftClose, SquarePen, Trash } from 'lucide-react'
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { ContextProvider } from './ContextWrapper'
 
 const Sidebar = () => {
 
-    const { sidebarOpen, handleSidebar } = useContext(ContextProvider)
+    const { sidebarOpen, handleSidebar, conversations, handleChatId, handleDelete, handleNewChat } = useContext(ContextProvider)
+
 
     return (
         <>
@@ -18,8 +19,8 @@ const Sidebar = () => {
                     </div>
 
                     <section className='my-7 px-7 space-y-7'>
-                        <div onClick={handleSidebar} className='ring-2 ring-(--color-chat) px-3 py-2 rounded-sm text-lg cursor-pointer text-gray-500 hover:text-(--color-text) hover:ring-4 transition-all ease-linear flex items-center gap-2 relative group overflow-hidden'>
-                            <span><CirclePlus size={20}/></span>
+                        <div onClick={() => { handleSidebar(), handleNewChat() }} className='ring-2 ring-(--color-chat) px-3 py-2 rounded-sm text-lg cursor-pointer text-gray-500 hover:text-(--color-text) hover:ring-4 transition-all ease-linear flex items-center gap-2 relative group overflow-hidden'>
+                            <span><CirclePlus size={20} /></span>
                             New Conversation
                             <span className='absolute -right-10 group-hover:right-5 transition-all ease-in-out'><Bot /></span>
                         </div>
@@ -28,19 +29,22 @@ const Sidebar = () => {
 
                         <div className=' space-y-5'>
                             <h4 className='text-(--color-text) text-xl font-semibold'>Conversations</h4>
-                            <div onClick={handleSidebar} className='relative flex gap-2 items-center ring-1 ring-(--color-chat) hover:bg-(--color-chat) text-(--color-text) rounded-sm py-2 px-3 group overflow-hidden'>
-                                <span className=''><Bot /></span>
-                                <h5 className='text-sm text-clip'>Chat Name</h5>
-                                <div className='flex items-center gap-1 absolute -right-12 group-hover:right-5 transition-all ease-in-out cursor-pointer text-(--color-comp)'>
-                                    <SquarePen size={20} className='hover:text-(--color-hovered) transition-colors ease-in-out' />
-                                    <Trash size={20} className='hover:text-(--color-hovered) transition-colors ease-in-out' />
+                            {conversations.length === 0 && <h4 className='text-(--color-text)/50 text-center text-sm font-semibold'>No chat history</h4>}
+                            {conversations.map(chat => {
+                                return <div key={chat.id} onClick={() => { handleSidebar(), handleChatId(chat.id) }} className='relative flex gap-2 items-center ring-1 ring-(--color-chat) hover:bg-(--color-chat) text-(--color-text) rounded-sm py-2 px-3 group overflow-hidden'>
+                                    <span className=''><Bot /></span>
+                                    <h5 className='text-sm text-clip'>{chat.messages[0].text}</h5>
+                                    <div className='flex items-center gap-1 absolute -right-12 group-hover:right-5 transition-all ease-in-out cursor-pointer'>
+                                        <SquarePen size={20} className='text-(--color-comp) hover:text-(--color-hovered) transition-colors ease-in-out' />
+                                        <Trash onClick={handleDelete(chat.id)} size={20} className='text-red-500 transition-colors ease-in-out' />
+                                    </div>
                                 </div>
-                            </div>
+                            })}
                         </div>
                     </section>
-                </aside>
+                </aside >
                 {sidebarOpen &&
-                    <section className='w-[calc(100%-400px)] h-screen bg-(--color-bg)/20 backdrop-blur-2xl z-50 fixed right-0 to-0'></section>
+                    <section onClick={handleSidebar} className='w-[calc(100%-400px)] h-screen bg-(--color-bg)/20 backdrop-blur-2xl z-50 fixed right-0 to-0'></section>
                 }
             </section >
         </>
