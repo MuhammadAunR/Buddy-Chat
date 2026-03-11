@@ -23,57 +23,54 @@ const ContextWrapper = ({ children }) => {
         if (chat) setMessages(chat.messages)
     }
 
-    const handleNewChat = () => {
-        setMessages([])
-        setChatId(null)
-        saveConversation()
-        alert('New Chat started')
-    }
-
     const handleDelete = (id) => {
-        const chatToBeDeleted = conversations.find(item => item.id === id)
-        console.log(chatToBeDeleted)
+        const afterDeletionChats = conversations.filter(item => item.id != id)
+        setConversations(afterDeletionChats)
+        localStorage.setItem('conversations', JSON.stringify(afterDeletionChats))
     }
 
-    // console.log(messages)
-    // console.log(conversations)
+    useEffect(() => {
+
+        const entries = performance.getEntriesByType('navigation')
+        if (entries.length > 0 && entries[0].type === 'reload') {
+            const lastChat = conversations.at(-1)
+            if (lastChat) {
+                setMessages(lastChat.messages)
+                setChatId(lastChat.id)
+            }
+        }
+    }, [])
+
+
 
     useEffect(() => {
         function saveConversation() {
-            if (messages.length > 0) {
+            if (messages.length === 0) return
+
+            if (ChatId) {
+                const updatedChat = conversations.map(chat => {
+                    return chat.id === ChatId ? { ...chat, messages } : chat
+                })
+                localStorage.setItem('conversations', JSON.stringify(updatedChat))
+            } else {
                 const newConversation = {
                     id: Date.now(),
                     date: new Date().toLocaleDateString(),
                     time: new Date().toLocaleTimeString(),
-                    messages: messages
+                    messages: messages,
                 }
+                // setChatId(null)
                 const updatedConversations = [...conversations, newConversation]
                 localStorage.setItem('conversations', JSON.stringify(updatedConversations))
             }
         };
-
-        window.addEventListener('beforeunload', saveConversation)
-        return () => window.removeEventListener('beforeunload', saveConversation)
-
-        // const handleBeforeUnload = () => {
-        //     if (messages.length > 0) {
-        //         const newConversation = {
-        //             id: Date.now(),
-        //             date: new Date().toLocaleDateString(),
-        //             messages: messages
-        //         }
-        //         // if (newConversation) {
-        //         //     newConversation.id === ChatId
-        //         //     return;
-        //         // }
-        //         const updatedConversations = [...conversations, newConversation]
-        //         localStorage.setItem('conversations', JSON.stringify(updatedConversations))
-        //     }
-        // }
-        // window.addEventListener('beforeunload', handleBeforeUnload)
-        // return () => window.removeEventListener('beforeunload', handleBeforeUnload)
-
+        saveConversation()
     }, [messages])
+
+    const handleNewChat = () => {
+        setMessages([])
+        setChatId(null)
+    }
 
     return (
         <ContextProvider.Provider value={{

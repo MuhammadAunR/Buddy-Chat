@@ -6,7 +6,6 @@ const Sidebar = () => {
 
     const { sidebarOpen, handleSidebar, conversations, handleChatId, handleDelete, handleNewChat } = useContext(ContextProvider)
 
-
     return (
         <>
             <section className='w-full'>
@@ -27,19 +26,24 @@ const Sidebar = () => {
 
                         <div className='w-full h-px bg-(--color-chat)'></div>
 
-                        <div className=' space-y-5'>
+                        <div className='space-y-5'>
                             <h4 className='text-(--color-text) text-xl font-semibold'>Conversations</h4>
-                            {conversations.length === 0 && <h4 className='text-(--color-text)/50 text-center text-sm font-semibold'>No chat history</h4>}
-                            {conversations.map(chat => {
-                                return <div key={chat.id} onClick={() => { handleSidebar(), handleChatId(chat.id) }} className='relative flex gap-2 items-center ring-1 ring-(--color-chat) hover:bg-(--color-chat) text-(--color-text) rounded-sm py-2 px-3 group overflow-hidden'>
-                                    <span className=''><Bot /></span>
-                                    <h5 className='text-sm text-clip'>{chat.messages[0].text}</h5>
-                                    <div className='flex items-center gap-1 absolute -right-12 group-hover:right-5 transition-all ease-in-out cursor-pointer'>
-                                        <SquarePen size={20} className='text-(--color-comp) hover:text-(--color-hovered) transition-colors ease-in-out' />
-                                        <Trash onClick={handleDelete(chat.id)} size={20} className='text-red-500 transition-colors ease-in-out' />
+                            <div className='space-y-3 h-120 py-2 overflow-y-scroll border-2 rounded-lg border-(--color-chat) bg-(--color-chat)/30'>
+                                {conversations.length === 0 && <h4 className='text-(--color-text)/50 text-center text-sm font-semibold'>No chat history</h4>}
+                                {conversations.map(chat => {
+                                    return <div key={chat.id} onClick={() => { handleSidebar(), handleChatId(chat.id) }} className='relative flex gap-2 items-center ring-1 ring-(--color-chat) hover:bg-(--color-chat) text-(--color-text) rounded-sm py-2 px-3 mx-1 group overflow-hidden'>
+                                        <span className=''><Bot /></span>
+                                        <h5 className='text-sm text-clip'>{chat.messages[0].text}</h5>
+                                        <div className='flex items-center gap-1 absolute -right-12 group-hover:right-5 transition-all ease-in-out cursor-pointer'>
+                                            <SquarePen size={20} className='text-(--color-comp) hover:text-(--color-hovered) transition-colors ease-in-out' />
+                                            <Trash onClick={(e) => {
+                                                e.stopPropagation()
+                                                handleDelete(chat.id)
+                                            }} size={20} className='text-red-500 transition-colors ease-in-out' />
+                                        </div>
                                     </div>
-                                </div>
-                            })}
+                                })}
+                            </div>
                         </div>
                     </section>
                 </aside >
