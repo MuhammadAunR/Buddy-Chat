@@ -5,22 +5,23 @@ import { sendMessage } from '../services/gemini'
 import Markdown from 'react-markdown'
 import Sidebar from '../components/Sidebar'
 import { ContextProvider } from '../components/ContextWrapper'
+import { TypeAnimation } from 'react-type-animation'
 
 const Home = () => {
 
     const [input, setInput] = useState('')
     const [loading, setLoading] = useState(false)
 
-    const { setMessages ,messages } = useContext(ContextProvider)
+    const { setMessages, messages } = useContext(ContextProvider)
 
     const handleSend = async () => {
         if (!input.trim() || loading) return
-        setMessages(prev => [...prev, { role: 'User', text: input }])
+        setMessages(prev => [...prev, { role: 'user', text: input }])
         setInput('')
         setLoading(true)
 
         const response = await sendMessage(input)
-        setMessages(prev => [...prev, { role: 'AI', text: response }])
+        setMessages(prev => [...prev, { role: 'assistant', text: response }])
         setLoading(false)
     }
 
@@ -46,20 +47,37 @@ const Home = () => {
                     {messages.map((msg, index) => (
                         <div
                             key={index}
-                            className={`${msg.role === 'User' ? 'text-right' : 'text-left'} my-3`}>
+                            className={`${msg.role === 'user' ? 'text-right' : 'text-left'} my-3`}>
                             <div
                                 className={`inline-block rounded-2xl py-2 text-(--color-text) text-lg px-5 wrap-break-word
-                                ${msg.role === 'User' ? 'bg-(--color-chat)' : 'bg-(--color-comp)/10 prose'} relative group`}>
-                                {msg.role === 'AI' ? <Markdown>{msg.text}</Markdown> : msg.text}
+                                ${msg.role === 'user' ? 'bg-(--color-chat)' : 'bg-(--color-comp)/10 prose'} relative group`}>
+                                {msg.role === 'assistant' ? <Markdown>{msg.text}</Markdown> : msg.text}
                                 <span
                                     title='Copy to Clipboard'
                                     onClick={() => copyTextToClipboard(msg.text)}
-                                    className={`absolute -top-7 ${msg.role === 'User' ? 'right-5' : 'left-5'} opacity-0 group-hover:opacity-100 transition-all ease-linear duration-300 cursor-pointer hover:text-(--color-hovered)`}>
+                                    className={`absolute -top-7 ${msg.role === 'user' ? 'right-5' : 'left-5'} opacity-0 group-hover:opacity-100 transition-all ease-linear duration-300 cursor-pointer hover:text-(--color-hovered)`}>
                                     <Copy size={20} />
                                 </span>
                             </div>
                         </div>
                     ))}
+                    {messages.length === 0 &&
+                        <div className='flex justify-center'>
+                            <h3 className='text text-(--color-text) max-md:text-xl lg:text-3xl'> <TypeAnimation
+                                sequence={[
+                                    'Ready when you are.',
+                                    2000,
+                                    'Where should we begin?',
+                                    2000,
+                                    'What are you working on?',
+                                    2000,
+                                ]}
+                                wrapper="span"
+                                speed={50}
+                                repeat={Infinity}
+                            /></h3>
+                        </div>
+                    }
                     {loading && (
                         <div className='text-left my-3'>
                             <Loader className='loader-animate ml-1' color='white' />
@@ -90,7 +108,7 @@ const Home = () => {
                             handleSend()
                         }}
                         className='absolute right-12 top-5.5 text-(--color-comp) hover:text-(--color-hovered) transition-all ease-linear hover:translate-x-1 cursor-pointer'>
-                        <SendHorizontal />
+                        {loading ? <Loader className='loader-animate' color='white' /> : <SendHorizontal />}
                     </span>
                 </div>
 

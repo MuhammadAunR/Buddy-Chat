@@ -12,7 +12,6 @@ const ContextWrapper = ({ children }) => {
     })
     const [ChatId, setChatId] = useState(null)
 
-
     const handleSidebar = () => {
         setSidebarOpen(!sidebarOpen)
     }
@@ -30,7 +29,6 @@ const ContextWrapper = ({ children }) => {
     }
 
     useEffect(() => {
-
         const entries = performance.getEntriesByType('navigation')
         if (entries.length > 0 && entries[0].type === 'reload') {
             const lastChat = conversations.at(-1)
@@ -40,8 +38,6 @@ const ContextWrapper = ({ children }) => {
             }
         }
     }, [])
-
-
 
     useEffect(() => {
         function saveConversation() {
@@ -59,7 +55,6 @@ const ContextWrapper = ({ children }) => {
                     time: new Date().toLocaleTimeString(),
                     messages: messages,
                 }
-                // setChatId(null)
                 const updatedConversations = [...conversations, newConversation]
                 localStorage.setItem('conversations', JSON.stringify(updatedConversations))
             }

@@ -45,7 +45,7 @@ const Sidebar = () => {
                                 {conversations.map(chat => {
                                     return <div key={chat.id} onClick={() => { handleSidebar(), handleChatId(chat.id) }} className='relative flex gap-2 items-center ring-1 ring-(--color-chat) hover:bg-(--color-chat) text-(--color-text) rounded-sm py-2 px-3 mx-1 group overflow-hidden'>
                                         <span className=''><Bot /></span>
-                                        <h5 className='text-sm text-clip'>{chat.messages[0].text}</h5>
+                                        <h5 className='text-sm truncate pr-15'>{chat.messages[0].text}</h5>
                                         <div className='flex items-center gap-1 absolute -right-12 group-hover:right-5 transition-all ease-in-out cursor-pointer'>
                                             <SquarePen size={20} className='text-(--color-comp) hover:text-(--color-hovered) transition-colors ease-in-out' />
                                             <Trash onClick={(e) => {
