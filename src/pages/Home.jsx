@@ -30,7 +30,7 @@ const Home = () => {
     }
 
     return (
-        <main className='relative h-screen bg-(--color-chat) overflow-hidden'>
+        <main className='relative h-screen bg-(--color-chat) overflow-hidden max-w-400 mx-auto'>
             <Sidebar />
             <div className='w-full h-70'>
                 <img
@@ -40,7 +40,7 @@ const Home = () => {
                 />
             </div>
 
-            <section className='bg-(--color-bg)/70 backdrop-blur-2xl w-10/14 mx-auto rounded-2xl flex flex-col justify-between absolute top-30 left-1/2 -translate-x-1/2 bottom-2 overflow-y-scroll'>
+            <section className='bg-(--color-bg)/70 backdrop-blur-2xl w-10/11 lg:w-10/14 mx-auto rounded-2xl flex flex-col justify-between absolute top-30 left-1/2 -translate-x-1/2 bottom-2 overflow-y-scroll'>
 
                 <div className='flex-1 px-5 py-7'>
                     {messages.map((msg, index) => (

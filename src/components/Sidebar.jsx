@@ -8,10 +8,22 @@ const Sidebar = () => {
 
     return (
         <>
-            <section className='w-full'>
-                <aside className={`h-screen w-100 fixed top-0 z-50 bg-(--color-bg) transition-all ease-linear  ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+            <section className='w-full max-w-400 mx-auto'>
+                <aside className={`h-screen w-100 fixed top-0 z-50 bg-(--color-bg) transition-all ease-linear  ${sidebarOpen ? 'translate-x-0' : '-translate-x-full -z-50'}`}>
                     <div className='flex items-center justify-between px-5 py-2'>
-                        <h2 className='font-bold text-2xl text-(--color-text)'>BuddyChat</h2>
+                        <h2 className='font-bold text-xl flex items-center gap-1 text-(--color-text)'>
+                            <span>Buddy<span className='text-(--color-comp)'>Chat</span></span>
+                            <span>
+                                <lord-icon
+                                    src="https://cdn.lordicon.com/kdduutaw.json"
+                                    trigger="loop"
+                                    delay="1000"
+                                    stroke="bold"
+                                    state="hover-looking-around"
+                                    colors="primary:#3080e8,secondary:#9cc2f4">
+                                </lord-icon>
+                            </span>
+                        </h2>
                         <span onClick={handleSidebar} className='cursor-pointer text-(--color-comp) hover:text-(--color-hovered) hover:-translate-x-1 transition-all ease-linear'>
                             <PanelLeftClose size={26} />
                         </span>
@@ -44,6 +56,20 @@ const Sidebar = () => {
                                     </div>
                                 })}
                             </div>
+                        </div>
+                        <div className='text-(--color-text) flex gap-2 items-center justify-center italic'>
+                            Created with
+                            <span>
+                                <lord-icon
+                                    src="https://cdn.lordicon.com/jpuldrhu.json"
+                                    trigger="loop"
+                                    delay="1000"
+                                    stroke="bold"
+                                    state="in-reveal"
+                                    colors="primary:#fad1e6,secondary:#e83a30">
+                                </lord-icon>
+                            </span>
+                            by M Aun
                         </div>
                     </section>
                 </aside >
