@@ -1,7 +1,7 @@
 import heroSectionImage from '../assets/hero-section.webp'
 import { Copy, Loader, SendHorizontal } from 'lucide-react'
 import { useContext, useEffect, useState } from 'react'
-import { sendMessage } from '../services/gemini'
+import { sendMessage } from '../services/groq'
 import Markdown from 'react-markdown'
 import Sidebar from '../components/Sidebar'
 import { ContextProvider } from '../components/ContextWrapper'

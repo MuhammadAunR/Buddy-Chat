@@ -6,7 +6,7 @@ const Navbar = () => {
 
     const { handleSidebar } = useContext(ContextProvider)
     return (
-        <nav className='flex items-center justify-between py-5 px-10 text-(--color-text) fixed z-30 w-full max-w-400 left-1/2 -translate-x-1/2'>
+        <nav className='flex items-center justify-between py-5 px-5 md:px-10 text-(--color-text) fixed z-30 w-full max-w-400 left-1/2 -translate-x-1/2'>
             <h1 className='font-bold text-3xl flex items-center gap-1'>
                 <span>Buddy<span className='text-(--color-comp)'>Chat</span></span>
                 <span>
